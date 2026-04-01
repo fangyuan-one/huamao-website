@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>外贸贸易平台 - Global Trade</title>
-    <!-- Chart.js 图表库 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -1049,131 +1047,6 @@
             display: block;
         }
 
-        /* 趋势分析样式 */
-        .trend-section {
-            margin-bottom: 25px;
-        }
-
-        .trend-section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .trend-chart-container {
-            position: relative;
-            height: 250px;
-            margin-bottom: 20px;
-        }
-
-        .trend-prediction {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-
-        .trend-prediction h4 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .trend-prediction-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .trend-prediction-item {
-            background: rgba(255,255,255,0.2);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .trend-prediction-value {
-            font-size: 24px;
-            font-weight: bold;
-            display: block;
-        }
-
-        .trend-prediction-label {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .trend-insight {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border-left: 4px solid #667eea;
-        }
-
-        .trend-insight p {
-            color: #666;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .trend-rank-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .trend-rank-number {
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-
-        .trend-rank-info {
-            flex: 1;
-        }
-
-        .trend-rank-name {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .trend-rank-stats {
-            font-size: 13px;
-            color: #999;
-        }
-
-        .trend-rank-bar {
-            width: 100px;
-            height: 8px;
-            background: #eee;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-left: 15px;
-        }
-
-        .trend-rank-bar-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
         /* 商品详情弹窗样式 */
         .product-detail-modal {
             display: none;
@@ -1553,14 +1426,13 @@
     <div class="stats-panel" id="statsPanel">
         <div class="stats-panel-content">
             <div class="stats-panel-header">
-                <h3>📊 访问量统计分析</h3>
+                <h3>📊 访问量统计</h3>
                 <button class="stats-panel-close" onclick="closeStatsPanel()">×</button>
             </div>
             <div class="stats-tabs">
-                <button class="stats-tab active" onclick="switchStatsTab('today')">今日</button>
-                <button class="stats-tab" onclick="switchStatsTab('month')">本月</button>
-                <button class="stats-tab" onclick="switchStatsTab('total')">总计</button>
-                <button class="stats-tab" onclick="switchStatsTab('trend')">📈 趋势分析</button>
+                <button class="stats-tab active" onclick="switchStatsTab('today')">今日访问</button>
+                <button class="stats-tab" onclick="switchStatsTab('month')">本月访问</button>
+                <button class="stats-tab" onclick="switchStatsTab('total')">总访问量</button>
             </div>
             <div class="stats-content">
                 <div class="stats-summary">
@@ -1584,10 +1456,28 @@
         </div>
     </div>
 
-    <!-- 在线留言 / 联系我们 -->
+    <!-- 在线咨询窗口 -->
     <div class="chat-widget">
-        <button class="chat-toggle" onclick="scrollToContact()">
-            📝
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h4>💬 在线咨询</h4>
+                <button class="chat-close" onclick="closeChat()">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-bubble">
+                        您好！欢迎咨询我们的产品和服务😊<br><br>
+                        请留言您感兴趣的产品或问题，我们会尽快回复您！
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="请输入您的问题..." onkeypress="handleChatKeypress(event)">
+                <button class="chat-send" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+        <button class="chat-toggle" onclick="toggleChat()">
+            💬
         </button>
     </div>
 
@@ -1722,12 +1612,6 @@
 
         // 初始化页面
         function init() {
-            // 强制清除并使用默认数据（解决 localStorage 数据损坏问题）
-            console.log('初始化产品数据，当前长度:', products ? products.length : 0);
-            localStorage.removeItem('globaltrade_products');
-            products = JSON.parse(JSON.stringify(defaultProducts));
-            saveToStorage('globaltrade_products', products);
-
             renderCarousel();
             renderProducts();
             updateAdminButton();
@@ -2022,24 +1906,37 @@
             }
         }
 
-        // 在线咨询/留言功能
-        // 触发 Chatra 实时聊天
+        // 在线咨询功能
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('open');
+        }
+
         function openChat() {
-            if (window.Chatra) {
-                window.Chatra('show');
-            } else {
-                // 如果 Chatra 未加载，滚动到联系我们
-                scrollToContact();
+            document.getElementById('chatWindow').classList.add('open');
+        }
+
+        function closeChat() {
+            document.getElementById('chatWindow').classList.remove('open');
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
             }
         }
 
-        // 滚动到联系我们 section
-        function scrollToContact() {
-            const contactSection = document.getElementById('contact');
-            if (contactSection) {
-                contactSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // 添加用户消息
+            addMessage(message, 'user');
+            input.value = '';
+
+            // 模拟自动回复
+            setTimeout(() => {
                 const responses = [
                     "感谢您的咨询！我们的客服团队会尽快为您解答。",
                     "您好！关于这个问题，我们需要进一步了解您的需求，请告诉我们更多细节。",
@@ -2145,18 +2042,9 @@
             renderStats();
         }
 
-        // 趋势分析图表变量
-        let trendChart = null;
-
         function renderStats() {
             const today = new Date().toISOString().split('T')[0];
             const currentMonth = today.substring(0, 7);
-
-            // 如果是趋势分析，单独处理
-            if (currentStatsTab === 'trend') {
-                renderTrendAnalysis();
-                return;
-            }
 
             let todayTotal = 0;
             let monthTotal = 0;
@@ -2232,177 +2120,6 @@
                     </tbody>
                 </table>
             `;
-        }
-
-        // 渲染趋势分析
-        function renderTrendAnalysis() {
-            const container = document.getElementById('statsTableContainer');
-
-            // 获取最近7天的数据
-            const last7Days = [];
-            const last7DaysData = [];
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
-                const dateStr = date.toISOString().split('T')[0];
-                last7Days.push(dateStr.substring(5)); // 月-日
-
-                // 计算当天的总访问量
-                let dayTotal = 0;
-                products.forEach(product => {
-                    const stats = productViews[product.id] || { daily: {}, monthly: {}, total: 0 };
-                    dayTotal += stats.daily[dateStr] || 0;
-                });
-                last7DaysData.push(dayTotal);
-            }
-
-            // 计算趋势预测（简单移动平均）
-            const avgViews = last7DaysData.reduce((a, b) => a + b, 0) / 7;
-            const lastDay = last7DaysData[6];
-            const prevDay = last7DaysData[5];
-            const dayOverDayChange = lastDay - prevDay;
-            const dayOverDayPercent = prevDay > 0 ? ((dayOverDayChange / prevDay) * 100).toFixed(1) : 0;
-
-            // 预测明天和7天后的访问量（基于趋势）
-            const trend = dayOverDayChange;
-            const predictedTomorrow = Math.max(0, Math.round(lastDay + trend));
-            const predictedWeekLater = Math.max(0, Math.round(lastDay + trend * 7));
-
-            // 获取热门商品 TOP 3
-            const productStats = products.map(product => {
-                const stats = productViews[product.id] || { total: 0 };
-                return { name: product.name, total: stats.total || 0 };
-            }).sort((a, b) => b.total - a.total).slice(0, 3);
-
-            // 生成趋势分析内容
-            container.innerHTML = `
-                <div class="trend-section">
-                    <div class="trend-section-title">📊 访问量趋势（近7天）</div>
-                    <div class="trend-chart-container">
-                        <canvas id="trendChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="trend-section">
-                    <div class="trend-section-title">🔮 趋势预测</div>
-                    <div class="trend-prediction">
-                        <h4>📈 智能预测</h4>
-                        <div class="trend-prediction-grid">
-                            <div class="trend-prediction-item">
-                                <span class="trend-prediction-value">${lastDay}</span>
-                                <span class="trend-prediction-label">今日访问量</span>
-                            </div>
-                            <div class="trend-prediction-item">
-                                <span class="trend-prediction-value">${dayOverDayPercent > 0 ? '+' : ''}${dayOverDayPercent}%</span>
-                                <span class="trend-prediction-label">较昨日 ${dayOverDayPercent > 0 ? '增长' : '下降'}</span>
-                            </div>
-                            <div class="trend-prediction-item">
-                                <span class="trend-prediction-value">${predictedTomorrow}</span>
-                                <span class="trend-prediction-label">预测明日访问</span>
-                            </div>
-                            <div class="trend-prediction-item">
-                                <span class="trend-prediction-value">${predictedWeekLater}</span>
-                                <span class="trend-prediction-label">预测7天后访问</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="trend-section">
-                    <div class="trend-section-title">🏆 热门商品 TOP 3</div>
-                    ${productStats.map((item, index) => `
-                        <div class="trend-rank-item">
-                            <div class="trend-rank-number">${index + 1}</div>
-                            <div class="trend-rank-info">
-                                <div class="trend-rank-name">${item.name}</div>
-                                <div class="trend-rank-stats">总访问量: ${item.total}</div>
-                            </div>
-                            <div class="trend-rank-bar">
-                                <div class="trend-rank-bar-fill" style="width: ${item.total > 0 ? (item.total / productStats[0].total * 100) : 0}%"></div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <div class="trend-section">
-                    <div class="trend-section-title">💡 数据洞察</div>
-                    <div class="trend-insight">
-                        ${generateInsight(last7DaysData, dayOverDayPercent, avgViews)}
-                    </div>
-                </div>
-            `;
-
-            // 绘制图表
-            setTimeout(() => {
-                const ctx = document.getElementById('trendChart');
-                if (ctx && Chart) {
-                    if (trendChart) {
-                        trendChart.destroy();
-                    }
-                    trendChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: last7Days,
-                            datasets: [{
-                                label: '日访问量',
-                                data: last7DaysData,
-                                borderColor: '#667eea',
-                                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                                fill: true,
-                                tension: 0.4,
-                                pointBackgroundColor: '#667eea',
-                                pointRadius: 5,
-                                pointHoverRadius: 7
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 1
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }, 100);
-        }
-
-        // 生成数据洞察
-        function generateInsight(data, changePercent, avg) {
-            const max = Math.max(...data);
-            const min = Math.min(...data);
-            const today = data[data.length - 1];
-            const peakDay = data.indexOf(max) + 1;
-
-            let insight = '';
-
-            if (changePercent > 10) {
-                insight = `访问量持续增长！今日较昨日增长 <strong>${changePercent}%</strong>，表明用户关注度正在提升。建议保持当前推广策略，并适当增加广告投放。`;
-            } else if (changePercent < -10) {
-                insight = `今日访问量有所下降（<strong>${changePercent}%</strong>）。可能原因：推广力度减弱、竞争对手活动、或内容更新不及时。建议检查推广计划并适时调整。`;
-            } else {
-                insight = `访问量保持稳定，今日访问量为 <strong>${today}</strong>，处于正常波动范围。建议持续优化商品展示和用户体验。`;
-            }
-
-            if (max - min > max * 0.5) {
-                insight += `<br><br>📊 注意到本周访问量波动较大（最高${max}，最低${min}），建议分析峰值日的推广活动，以便复制成功经验。`;
-            }
-
-            if (today > avg * 1.2) {
-                insight += `<br><br>🎉 今日表现优于平均水平（${avg.toFixed(1)}），用户参与度较高！`;
-            }
-
-            return `<p>${insight}</p>`;
         }
 
         // ==================== 原有功能继续 ====================
