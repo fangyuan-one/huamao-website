@@ -1722,6 +1722,11 @@
 
         // 初始化页面
         function init() {
+            // 确保 products 是有效的数组
+            if (!products || !Array.isArray(products) || products.length === 0) {
+                products = [...defaultProducts];
+                saveToStorage('globaltrade_products', products);
+            }
             renderCarousel();
             renderProducts();
             updateAdminButton();
