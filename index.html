@@ -1612,6 +1612,11 @@
 
         // 初始化页面
         function init() {
+            // 强制清除并使用默认数据
+            localStorage.removeItem('globaltrade_products');
+            products = JSON.parse(JSON.stringify(defaultProducts));
+            saveToStorage('globaltrade_products', products);
+
             renderCarousel();
             renderProducts();
             updateAdminButton();
