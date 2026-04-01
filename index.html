@@ -1584,28 +1584,10 @@
         </div>
     </div>
 
-    <!-- 在线咨询窗口 -->
+    <!-- 在线留言 / 联系我们 -->
     <div class="chat-widget">
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <h4>💬 在线咨询</h4>
-                <button class="chat-close" onclick="closeChat()">×</button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="message-bubble">
-                        您好！欢迎咨询我们的产品和服务😊<br><br>
-                        请留言您感兴趣的产品或问题，我们会尽快回复您！
-                    </div>
-                </div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" class="chat-input" id="chatInput" placeholder="请输入您的问题..." onkeypress="handleChatKeypress(event)">
-                <button class="chat-send" onclick="sendMessage()">➤</button>
-            </div>
-        </div>
-        <button class="chat-toggle" onclick="toggleChat()">
-            💬
+        <button class="chat-toggle" onclick="scrollToContact()">
+            📝
         </button>
     </div>
 
@@ -2034,37 +2016,24 @@
             }
         }
 
-        // 在线咨询功能
-        function toggleChat() {
-            document.getElementById('chatWindow').classList.toggle('open');
-        }
-
+        // 在线咨询/留言功能
+        // 触发 Chatra 实时聊天
         function openChat() {
-            document.getElementById('chatWindow').classList.add('open');
-        }
-
-        function closeChat() {
-            document.getElementById('chatWindow').classList.remove('open');
-        }
-
-        function handleChatKeypress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
+            if (window.Chatra) {
+                window.Chatra('show');
+            } else {
+                // 如果 Chatra 未加载，滚动到联系我们
+                scrollToContact();
             }
         }
 
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-
-            if (!message) return;
-
-            // 添加用户消息
-            addMessage(message, 'user');
-            input.value = '';
-
-            // 模拟自动回复
-            setTimeout(() => {
+        // 滚动到联系我们 section
+        function scrollToContact() {
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
                 const responses = [
                     "感谢您的咨询！我们的客服团队会尽快为您解答。",
                     "您好！关于这个问题，我们需要进一步了解您的需求，请告诉我们更多细节。",
