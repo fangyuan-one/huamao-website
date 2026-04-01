@@ -1722,13 +1722,12 @@
 
         // 初始化页面
         function init() {
-            // 确保 products 是有效的数组且有数据
-            console.log('products:', products);
-            if (!products || !Array.isArray(products) || products.length < 3) {
-                console.log('使用默认产品数据');
-                products = JSON.parse(JSON.stringify(defaultProducts));
-                saveToStorage('globaltrade_products', products);
-            }
+            // 强制清除并使用默认数据（解决 localStorage 数据损坏问题）
+            console.log('初始化产品数据，当前长度:', products ? products.length : 0);
+            localStorage.removeItem('globaltrade_products');
+            products = JSON.parse(JSON.stringify(defaultProducts));
+            saveToStorage('globaltrade_products', products);
+
             renderCarousel();
             renderProducts();
             updateAdminButton();
